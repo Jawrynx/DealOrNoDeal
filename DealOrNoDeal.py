@@ -1,5 +1,6 @@
 import random
 import time
+import math
 
 num = 22
 BoxList = []
@@ -27,7 +28,31 @@ class box():
         self.value = value
         self.boxOpen = False
 
+class dealer():
+    def offer(values, numbers):
+        print("...\n...\n...\nThe Dealer Is Calling!\n...\n...\n...")
+        time.sleep(1)
+        valuesConverted = game.convertValues(values)
+        highestValue = valuesConverted[-1]
+        offerconversion = highestValue / len(numbers)
+        Offer = int(math.ceil(offerconversion / 100)) * 100
+        print("The Dealer has offered you {offer}! Do you wish to accept his offer? Type 'Y' or 'N' below to decide!".format(offer=Offer))
+        decision = input()
+        if decision == 'Y':
+            print("Very well, you have accepted the Dealers Offer and won {offer}! Thank you for playing Deal Or No Deal!".format(offer=Offer))
+        else:
+            return
+
+
+
 class game():
+    def convertValues(values):
+        strippedPence = [i.strip("p") for i in values]
+        strippedPound = [i.strip("£") for i in strippedPence]
+        strippedComma = [i.replace(",", "") for i in strippedPound]
+        integerValues = [int(i) for i in strippedComma]
+        return integerValues
+
     def spawnBoxes():
         values = ["1p", "10p", "50p", "£1", "£5", "£10", "£50", "£100", "£250", "£500", "£750", "£1,000", "£2,000", "£3,000", "£4,000", "£5,000", "£7,500", "£10,000", "£25,000", "£50,000", "£75,000", "£100,000"]
         Boxes = []
@@ -42,6 +67,19 @@ class game():
         numbers = [i for i in range(1, 23)]
         values = ["1p", "10p", "50p", "£1", "£5", "£10", "£50", "£100", "£250", "£500", "£750", "£1,000", "£2,000", "£3,000", "£4,000", "£5,000", "£7,500", "£10,000", "£25,000", "£50,000", "£75,000", "£100,000"]
         while len(BoxList) != 0:
+            if len(BoxList) == 16:
+                dealer.offer(values, numbers)
+            if len(BoxList) == 12:
+                dealer.offer(values, numbers)
+            if len(BoxList) == 8:
+                dealer.offer(values, numbers)
+            if len(BoxList) == 4:
+                dealer.offer(values, numbers)
+            if len(BoxList) == 2:
+                dealer.offer(values, numbers)
+            if len(BoxList) == 1:
+                prizeBox = values[0]
+                print("Congratulations! You have won {prize}!".format(prize=prizeBox))
             print(numbers)
             print(values)
             print("Select a number from above!")
@@ -52,7 +90,6 @@ class game():
                     values.remove(i.value)
                     numbers.remove(i.number)
                     BoxList.remove(i)
-
     def start():
         Host = host
         Host.spawn()
@@ -60,8 +97,6 @@ class game():
         time.sleep(1)
         BoxList = game.spawnBoxes()
         game.round()
-            
-
 
 game.start()
         
