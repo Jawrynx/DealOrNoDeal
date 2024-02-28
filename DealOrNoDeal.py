@@ -1,6 +1,7 @@
 import random
 import time
 import math
+import sys
 
 num = 22
 BoxList = []
@@ -36,10 +37,23 @@ class dealer():
         highestValue = valuesConverted[-1]
         offerconversion = highestValue / len(numbers)
         Offer = int(math.ceil(offerconversion / 100)) * 100
-        print("The Dealer has offered you {offer}! Do you wish to accept his offer? Type 'Y' or 'N' below to decide!".format(offer=Offer))
+        if Offer >= 1000 & Offer < 10000:
+            strOffer = str(Offer)
+            formatOffer = strOffer[:1] + "," + strOffer[1:]
+        elif Offer >= 10000:
+            strOffer = str(Offer)
+            formatOffer = strOffer[:2]  + "," + strOffer[2:]
+        else:
+            formatOffer = str(Offer)
+
+        print("The Dealer has offered you £{offer}! Do you wish to accept his offer? Type 'Y' or 'N' below to decide!".format(offer=formatOffer))
         decision = input()
         if decision == 'Y':
-            print("Very well, you have accepted the Dealers Offer and won {offer}! Thank you for playing Deal Or No Deal!".format(offer=Offer))
+            print("Very well, you have accepted the Dealers Offer and won £{offer}! Thank you for playing Deal Or No Deal!".format(offer=formatOffer))
+            time.sleep(3)
+            print("EXITING GAME!")
+            time.sleep(3)
+            sys.exit()
         else:
             return
 
@@ -80,16 +94,23 @@ class game():
             if len(BoxList) == 1:
                 prizeBox = values[0]
                 print("Congratulations! You have won {prize}!".format(prize=prizeBox))
+                time.sleep(3)
+                print("...\n...\n...\nThank You For Playing!\nEXITING GAME!\n...\n...\n...")
+                time.sleep(3)
+                sys.exit()
             print(numbers)
             print(values)
             print("Select a number from above!")
             selection = input()
-            for i in BoxList:
-                if i.number == int(selection):
-                    print("You have removed {value} from the playing field!".format(value=i.value))
-                    values.remove(i.value)
-                    numbers.remove(i.number)
-                    BoxList.remove(i)
+            if int(selection) in numbers:
+                for i in BoxList:
+                    if i.number == int(selection):
+                        print("You have removed {value} from the playing field!".format(value=i.value))
+                        values.remove(i.value)
+                        numbers.remove(i.number)
+                        BoxList.remove(i)
+            else:
+                print("Error!")
     def start():
         Host = host
         Host.spawn()
@@ -99,4 +120,3 @@ class game():
         game.round()
 
 game.start()
-        
